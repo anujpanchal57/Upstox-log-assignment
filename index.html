@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upstox Assignment</title>
+    <link rel="shortcut icon" type="image/png" href="assets/upstox.jpg" />
+    <link rel = "stylesheet" href = "./css/style.css" />
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <!-- For angularjs -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+    <!-- For sockets -->
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script>
+        var app = angular.module('logApp', []);
+        app.controller('logCtrl', function($scope) {
+            $scope.connected = false;
+            $scope.loader = true;
+            var domain = "0.0.0.0";
+            var location_port = "5000";
+            var socket = io.connect('http://' + domain + ':' + location_port);
+            
+            // For connecting to the socket
+            socket.on('connect', function() {
+                socket.emit('join', {data: 'Upstox demo'});
+            });
+
+            // For receiving an array of logs, on connecting successfully with the socket
+            socket.on('logger', data => {
+                $scope.loader = false;
+                $scope.connected = true;
+                $scope.logs_arr = [];
+                for(var i = data.logs.length - 1; i >= 0; i--) {
+                    $scope.$apply(() => $scope.logs_arr.push(data.logs[i]));
+                }
+            });
+
+            // Function for adding a randomn log
+            $scope.update_log = function() {
+                socket.emit('logger_update', {data: 'update log'})
+            }
+        });
+    </script>
+</head>
+<body>
+    <div ng-controller = "logCtrl" ng-app = "logApp">
+        <h1>Upstox assignment</h1>
+            
+        <br>
+        <div class = "loader_div" ng-if = "loader == true">
+            <img src = "./assets/loader.gif" alt = "Loader">
+        </div>
+        <div class = "logs_table_div" id = "logs_table" ng-if = "connected == true">
+            <div class = "add_log_div">
+                <button class = "add_log_btn" ng-click = "update_log();">Add a randomn log</button>
+            </div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class = "headers">No.</th>
+                    <th class = "headers">Log Details</th>
+                </tr>
+                </thead>
+                <tbody id = "logs_content">
+                    <tr ng-repeat = "log in logs_arr track by $index">
+                        <td>{{$index + 1}}</td>
+                        <td>{{log}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+</body>
+</html>

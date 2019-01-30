@@ -1,0 +1,37 @@
+body {
+    font-family: "Times New Roman", Times, serif;
+    text-align: center;
+}
+
+.request_info_div {
+    text-align: right;
+    color: red;
+    font-weight: bold;
+    padding: 2px;
+}
+
+.log_request_btn {
+    float: left;
+    color: #fff;
+    background-color: #2b9eaa;
+    width: 27%;
+}
+
+.log_request_btn_div {
+    float: left;
+    text-align: left;
+}
+
+.request_btn_class {
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.headers {
+    text-align: center;
+}
+
+.logs_table_div {
+    width: 80% !important;
+    margin: 0 auto;
+}
