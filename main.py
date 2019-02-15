@@ -13,6 +13,7 @@ CORS(app)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
+## Calling the join event
 @socketio.on('join')
 def join_connection(data):
     logs = []
@@ -22,6 +23,7 @@ def join_connection(data):
         logs.append(line)
     emit('logger', {'logs': logs[-10:]})
 
+## Logger update event
 @socketio.on('logger_update')
 def logger_update(data):
     logs = []
